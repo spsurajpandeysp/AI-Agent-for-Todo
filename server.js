@@ -1,16 +1,18 @@
-import {db} from './db'
+const express = require('express')
+const todoRouters =  require('./routes/todo.route');
+const bodyParser = require('body-parser');
+const app = express();
 
-import {todosTable} from './db/schema'
 
-// tools
+app.use(bodyParser.json())
 
-async function getAllTodos(){
-    const todos = await db.select().from(todosTable);
-    return todos;
-}
+app.get("/health",(req,res)=>{
+    res.status(200).json({status:"Running"})
+})
 
-async function createTodo(todo) {
-    await db.insert(todosTable).values({
-        todo
-    })
-}
+
+app.use('/api',todoRouters)
+
+app.listen(4000,()=>{
+    console.log("server running to port: 4000")
+})
